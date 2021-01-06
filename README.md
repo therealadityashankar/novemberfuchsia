@@ -129,7 +129,7 @@ import november_fuchsia as nf
 dbs = nf.Abstract(fromfiles=["user.novemberfuchsia", "address.novemberfuchsia"])
 ```
 
-now you should see some formatting changes if you run the above lines of code, in the th
+now you should see some formatting changes if you run the above lines of code, in the the `.novemberfuchsia` file/files you've made
 
 then retrieve the databases via
 ```py
@@ -146,12 +146,19 @@ class User(UsersBase.User):
 
 # user collection affiliated actions
 class Users(UsersBase):
+    # the decorator converts the google
+    # cloud objects into `User` objects
+    # through a generator
+    @UsersBase.firestore_list
     def get_users_in_age(
             min_age : int, 
             max_age : int) -> list[User]:
         """get users within an age range"""
         # get just the way we normally do in firestore
-        return self.collection.
+        return (self.collection
+                  .where("age", ">", min_age)
+                  .where("age", "<", max_age)
+                  .stream())
         
         
 users = Users("users-v0.0.1") # the name of the collection to store in, in firestore
