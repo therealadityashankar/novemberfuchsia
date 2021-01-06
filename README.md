@@ -38,7 +38,7 @@ age           :        int | numlim(18, 123)      || the age of the user
 dbs.connect("google-firestore", firestore.Client())
 
 # you may now subclass both classes to add additional functionality to them
-Users, User = dbs.tables.get_db("User")
+Users = dbs.tables.get_db("User")
 users = Users("users-v1.0.0")
 
 app = Flask(__name__)
@@ -46,7 +46,7 @@ dbs.init_app(app)
 
 @app.route("/user/create")
 def create_user():
-    user = User(
+    user = users.User(
        email        = requests.args["email_id"],
        first_name   = requests.args["first_name"],
        last_name    = requests.args["last_name"],
